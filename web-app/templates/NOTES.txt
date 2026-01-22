@@ -1,0 +1,9 @@
+{{- /* NOTES.txt */ -}}
+
+1. Access the application at: http://your-app-host
+2. Check the status of the deployment:
+   kubectl get deployments -n {{ .Release.Namespace }}
+3. Check the status of the service:
+   kubectl get services -n {{ .Release.Namespace }}
+4. Check the status of the ingress:
+   kubectl get ingress -n {{ .Release.Namespace }}

@@ -1,0 +1,51 @@
+# Application configuration
+replicaCount: 3
+image:
+  repository: us-central1-docker.pkg.dev/project-525a47ad-8a94-41ce-85d/my-repo/web-app
+  tag: latest
+  pullPolicy: Always
+service:
+  type: ClusterIP
+  port: 80
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: my-web-app.com
+      paths:
+        - /
+  tls:
+    - secretName: my-web-app-tls
+      hosts:
+        - my-web-app.com
+
+# Database password for Secret (must be a string)
+dbPassword: "MySuperSecret123!"   # <--- add this
+
+# NGINX Ingress configuration
+nginx-ingress:
+  controller:
+    replicaCount: 2
+    service:
+      type: LoadBalancer
+
+# Cert-Manager configuration
+cert-manager:
+  installCRDs: false
+  
+
+# Vault configuration
+vault:
+  server:
+    ha:
+      enabled: true
+      replicas: 3
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      hosts:
+        - host: vault.example.com
+          paths: []

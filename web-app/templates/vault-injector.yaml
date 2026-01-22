@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "web-app.fullname" . }}-vault-injector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "web-app.name" . }}-vault-injector
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "web-app"
+        vault.hashicorp.com/agent-inject-secret-db-password: "database/creds/web-app"
+      labels:
+        app: {{ include "web-app.name" . }}-vault-injector
+    spec:
+      serviceAccountName: {{ include "web-app.fullname" . }}-sa
+      containers:
+      - name: web-app
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.service.port }}
