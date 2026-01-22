@@ -1,5 +1,9 @@
 name: Deploy Web App to GKE
 
+permissions:
+  id-token: write
+  contents: read
+
 on:
   push:
     branches:
